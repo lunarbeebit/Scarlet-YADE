@@ -13,8 +13,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Scarlet.IO.ContainerFormats
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Scarlet.IO.CompressionFormats", "Scarlet.IO.CompressionFormats\Scarlet.IO.CompressionFormats.csproj", "{9D6AF554-4256-4FF5-B2EF-D224C5326F19}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ScarletWinTest", "ScarletWinTest\ScarletWinTest.csproj", "{02ABAFE3-22DC-4ABB-ACF2-E5DD804D3B87}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -41,10 +39,6 @@ Global
 		{9D6AF554-4256-4FF5-B2EF-D224C5326F19}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{9D6AF554-4256-4FF5-B2EF-D224C5326F19}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{9D6AF554-4256-4FF5-B2EF-D224C5326F19}.Release|Any CPU.Build.0 = Release|Any CPU
-		{02ABAFE3-22DC-4ABB-ACF2-E5DD804D3B87}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{02ABAFE3-22DC-4ABB-ACF2-E5DD804D3B87}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{02ABAFE3-22DC-4ABB-ACF2-E5DD804D3B87}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{02ABAFE3-22DC-4ABB-ACF2-E5DD804D3B87}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

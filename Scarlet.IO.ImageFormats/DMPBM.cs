@@ -97,7 +97,8 @@ namespace Scarlet.IO.ImageFormats
             }
 
             Bitmap bitmap = imageBinary.GetBitmap();
-            bitmap.RotateFlip(RotateFlipType.RotateNoneFlipY);
+            //bitmap.RotateFlip(RotateFlipType.RotateNoneFlipY);
+            //Todo: RotateNoneFlipY doesn't exist
             return bitmap;
         }
     }
