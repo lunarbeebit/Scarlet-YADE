@@ -5,7 +5,7 @@ __Scarlet__ and its related libraries are aiming to provide functionality to con
 Disclaimer
 ==========
 
-This fork was made with the purpose of making Scarlet cross platform with Linux and MacOS for use with Yet Another Danganronpa Editor. Expect things to be broken, specially with the CLI project (the GUI project has been removed entirely). I've also updated the libraries to .Net 10
+This fork was made with the purpose of making Scarlet cross platform with Linux and MacOS for use with [Yet Another Danganronpa Editor](https://codeberg.org/lunarbeebit/Yet-Another-Danganronpa-Editor). Expect things to be broken, specially with the CLI project (the GUI project has been removed entirely). I've also updated the libraries to .Net 10
 
 The readme of CaptainSwag's fork will now be shown in its entirety.
 
