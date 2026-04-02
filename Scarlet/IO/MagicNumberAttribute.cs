@@ -23,8 +23,9 @@ namespace Scarlet.IO
             Position = position;
         }
 
-        public MagicNumberAttribute(string magicNumber, Encoding encoding, long position)
+        public MagicNumberAttribute(string magicNumber, int encoder, long position)
         {
+            var encoding = Encoding.GetEncoding(encoder);
             MagicNumber = encoding.GetBytes(magicNumber);
             Position = position;
         }

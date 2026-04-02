@@ -98,7 +98,7 @@ namespace Scarlet.Drawing
         {
             byte[] inputPixelData = new byte[inputStream.Length];
             inputStream.Seek(0, SeekOrigin.Begin);
-            inputStream.Read(inputPixelData, 0, inputPixelData.Length);
+            inputStream.ReadExactly(inputPixelData);
 
             InitializeInstance(width: width, height: height, inputPixelFormat: inputPixelFormat, inputPixelData: inputPixelData);
         }
@@ -116,7 +116,7 @@ namespace Scarlet.Drawing
         {
             byte[] inputPixelData = new byte[inputLength];
             inputStream.Seek(inputOffset, SeekOrigin.Begin);
-            inputStream.Read(inputPixelData, 0, inputLength);
+            inputStream.ReadExactly(inputPixelData, 0, inputLength);
 
             InitializeInstance(width: width, height: height, inputPixelFormat: inputPixelFormat, inputPixelData: inputPixelData);
         }
@@ -146,7 +146,7 @@ namespace Scarlet.Drawing
         {
             byte[] inputPixelData = new byte[inputStream.Length];
             inputStream.Seek(0, SeekOrigin.Begin);
-            inputStream.Read(inputPixelData, 0, inputPixelData.Length);
+            inputStream.ReadExactly(inputPixelData);
 
             InitializeInstance(width: width, height: height, inputPixelFormat: inputPixelFormat, inputEndianness: inputEndianness, inputPixelData: inputPixelData);
         }
@@ -165,7 +165,7 @@ namespace Scarlet.Drawing
         {
             byte[] inputPixelData = new byte[inputLength];
             inputStream.Seek(inputOffset, SeekOrigin.Begin);
-            inputStream.Read(inputPixelData, 0, inputLength);
+            inputStream.ReadExactly(inputPixelData, 0, inputLength);
 
             InitializeInstance(width: width, height: height, inputPixelFormat: inputPixelFormat, inputEndianness: inputEndianness, inputPixelData: inputPixelData);
         }
@@ -195,7 +195,7 @@ namespace Scarlet.Drawing
         {
             byte[] inputPixelData = new byte[inputStream.Length];
             inputStream.Seek(0, SeekOrigin.Begin);
-            inputStream.Read(inputPixelData, 0, inputPixelData.Length);
+            inputStream.ReadExactly(inputPixelData);
 
             InitializeInstance(width: width, height: height, inputPixelFormat: inputPixelFormat, outputFormat: outputFormat, inputPixelData: inputPixelData);
         }
@@ -214,7 +214,7 @@ namespace Scarlet.Drawing
         {
             byte[] inputPixelData = new byte[inputLength];
             inputStream.Seek(inputOffset, SeekOrigin.Begin);
-            inputStream.Read(inputPixelData, 0, inputLength);
+            inputStream.ReadExactly(inputPixelData, 0, inputLength);
 
             InitializeInstance(width: width, height: height, inputPixelFormat: inputPixelFormat, outputFormat: outputFormat, inputPixelData: inputPixelData);
         }
@@ -247,7 +247,7 @@ namespace Scarlet.Drawing
         public ImageBinary(int width, int height, PixelDataFormat inputPixelFormat, Endian inputEndianness, PixelDataFormat outputFormat, Endian outputEndianness, Stream inputStream)
         {
             byte[] inputPixelData = new byte[inputStream.Length];
-            inputStream.Read(inputPixelData, 0, inputPixelData.Length);
+            inputStream.ReadExactly(inputPixelData);
 
             InitializeInstance(width: width, height: height, inputPixelFormat: inputPixelFormat, inputEndianness: inputEndianness, outputFormat: outputFormat, outputEndianness: outputEndianness, inputPixelData: inputPixelData);
         }
@@ -267,7 +267,7 @@ namespace Scarlet.Drawing
         public ImageBinary(int width, int height, PixelDataFormat inputPixelFormat, Endian inputEndianness, PixelDataFormat outputFormat, Endian outputEndianness, Stream inputStream, int inputOffset, int inputLength)
         {
             byte[] inputPixelData = new byte[inputLength];
-            inputStream.Read(inputPixelData, inputOffset, inputLength);
+            inputStream.ReadExactly(inputPixelData, inputOffset, inputLength);
 
             InitializeInstance(width: width, height: height, inputPixelFormat: inputPixelFormat, inputEndianness: inputEndianness, outputFormat: outputFormat, outputEndianness: outputEndianness, inputPixelData: inputPixelData);
         }

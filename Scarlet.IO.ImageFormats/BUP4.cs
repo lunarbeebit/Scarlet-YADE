@@ -103,6 +103,7 @@ namespace Scarlet.IO.ImageFormats
 							g.DrawImageUnscaled(srcBitmap, imageInfo.X, imageInfo.Y);
 						}
 
+						/*
 						if (false)
 						{
 							foreach (PIC4UnknownInnerRectangle data in imageInfo.UnknownInnerRectangles)
@@ -115,6 +116,7 @@ namespace Scarlet.IO.ImageFormats
 									imageInfo.X + data.X1, imageInfo.Y + data.Y1,
 									data.X2 - data.X1, data.Y2 - data.Y1);
 						}
+						*/
 					}
 
 					if (ImagePermutations.Count > 0)

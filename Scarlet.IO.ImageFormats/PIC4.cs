@@ -112,19 +112,17 @@ namespace Scarlet.IO.ImageFormats
 								rectangleInfo.X + rectangleInfo.ImageInfo.X,
 								rectangleInfo.Y + rectangleInfo.ImageInfo.Y);
 						}
+						/*
+						foreach (PIC4UnknownInnerRectangle data in rectangleInfo.ImageInfo.UnknownInnerRectangles)
+							g.DrawRectangle(Pens.LawnGreen,
+								rectangleInfo.X + rectangleInfo.ImageInfo.X + data.X1, rectangleInfo.Y + rectangleInfo.ImageInfo.Y + data.Y1,
+								data.X2 - data.X1, data.Y2 - data.Y1);
 
-						if (false)
-						{
-							foreach (PIC4UnknownInnerRectangle data in rectangleInfo.ImageInfo.UnknownInnerRectangles)
-								g.DrawRectangle(Pens.LawnGreen,
-									rectangleInfo.X + rectangleInfo.ImageInfo.X + data.X1, rectangleInfo.Y + rectangleInfo.ImageInfo.Y + data.Y1,
-									data.X2 - data.X1, data.Y2 - data.Y1);
-
-							foreach (PIC4UnknownOuterRectangle data in rectangleInfo.ImageInfo.UnknownOuterRectangles)
-								g.DrawRectangle(Pens.OrangeRed,
-									rectangleInfo.X + rectangleInfo.ImageInfo.X + data.X1, rectangleInfo.Y + rectangleInfo.ImageInfo.Y + data.Y1,
-									data.X2 - data.X1, data.Y2 - data.Y1);
-						}
+						foreach (PIC4UnknownOuterRectangle data in rectangleInfo.ImageInfo.UnknownOuterRectangles)
+							g.DrawRectangle(Pens.OrangeRed,
+								rectangleInfo.X + rectangleInfo.ImageInfo.X + data.X1, rectangleInfo.Y + rectangleInfo.ImageInfo.Y + data.Y1,
+								data.X2 - data.X1, data.Y2 - data.Y1);
+						*/
 					}
 				}
 
@@ -222,16 +220,15 @@ namespace Scarlet.IO.ImageFormats
 			AlphaData = new byte[alphaSize];
 			Buffer.BlockCopy(imageData, copyPosition, AlphaData, 0, AlphaData.Length);
 
-			if (false)
+			/*
+			if (reader.BaseStream is FileStream fs)
 			{
-				if (reader.BaseStream is FileStream fs)
+				if (fs.Name.EndsWith("00KAZ_C00.bup") && CompressedDataSize == 0x2E2C)
 				{
-					if (fs.Name.EndsWith("00KAZ_C00.bup") && CompressedDataSize == 0x2E2C)
-					{
-						File.WriteAllBytes(@"D:\Temp\Konosuba Vita\____test____.dec", imageData);
-					}
+					File.WriteAllBytes(@"D:\Temp\Konosuba Vita\____test____.dec", imageData);
 				}
 			}
+			*/
 		}
 	}
 

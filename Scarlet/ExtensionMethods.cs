@@ -17,7 +17,7 @@ namespace Scarlet
         /* http://stackoverflow.com/a/23177585 */
         public static bool IsValid<TEnum>(this TEnum enumValue) where TEnum : struct
         {
-            var firstChar = enumValue.ToString()[0];
+            var firstChar = enumValue.ToString()![0];
             return (firstChar < '0' || firstChar > '9') && firstChar != '-';
         }
 

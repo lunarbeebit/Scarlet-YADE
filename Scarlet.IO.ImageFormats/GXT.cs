@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.IO;
 using System.Drawing;
-
+using System.Text.Unicode;
 using Scarlet.Drawing;
 using Scarlet.IO;
 
@@ -12,7 +12,7 @@ using Scarlet.Platform.Sony;
 
 namespace Scarlet.IO.ImageFormats
 {
-    [MagicNumber("GXT", 0x00)]
+    [MagicNumber("GXT",0x0000000D)]
     public class GXT : ImageFormat
     {
         public SceGxtHeader Header { get; private set; }
@@ -27,6 +27,8 @@ namespace Scarlet.IO.ImageFormats
 
         protected override void OnOpen(EndianBinaryReader reader)
         {
+            long lastPosition = reader.BaseStream.Position;
+            reader.BaseStream.Seek(lastPosition + 0x0000000D, SeekOrigin.Begin);
             Header = new SceGxtHeader(reader);
 
             Func<EndianBinaryReader, SceGxtTextureInfo> textureInfoGeneratorFunc;

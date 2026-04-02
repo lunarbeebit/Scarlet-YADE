@@ -102,8 +102,6 @@ namespace Scarlet.IO.ImageFormats
 
         private enum compression_type {none, DXT1, DXT3, DXT5 }
 
-        compression_type type;
-
         ImageBinary imageBinary;
 
         protected override void OnOpen(EndianBinaryReader reader)

@@ -12,7 +12,7 @@ namespace Scarlet.IO
 
         public FormatDetectionAttribute(Type formatClassType, string functionName)
         {
-            FormatDetectionDelegate = (FormatDetectionDelegate)Delegate.CreateDelegate(typeof(FormatDetectionDelegate), formatClassType.GetMethod(functionName));
+            FormatDetectionDelegate = (FormatDetectionDelegate)Delegate.CreateDelegate(typeof(FormatDetectionDelegate), formatClassType.GetMethod(functionName) ?? throw new InvalidOperationException());
         }
     }
 

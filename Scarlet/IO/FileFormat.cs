@@ -86,7 +86,7 @@ namespace Scarlet.IO
 
             EndianBinaryReader reader = new EndianBinaryReader(fileStream, endianness);
             {
-                foreach (var assembly in AssemblyHelpers.GetNonSystemAssemblies())
+                foreach (var assembly in AssemblyHelpers.GetAssemblies())
                 {
                     foreach (var type in assembly.GetExportedTypes().Where(x => x == typeof(T) || x.InheritsFrom(typeof(T))))
                     {
@@ -112,7 +112,7 @@ namespace Scarlet.IO
 
                         var verifyMethod = type.GetMethod(nameof(VerifyMagicNumber), BindingFlags.Static | BindingFlags.NonPublic | BindingFlags.FlattenHierarchy);
                         if (verifyMethod == null) throw new NullReferenceException("Reflection error on method fetch for file verification");
-                        VerifyResult verifyResult = ((VerifyResult)verifyMethod.Invoke(null, new object[] { reader, type }));
+                        VerifyResult verifyResult = ((VerifyResult)(verifyMethod.Invoke(null, new object[] { reader, type }) ?? throw new InvalidOperationException()));
 
                         if (verifyResult == VerifyResult.VerifyOkay)
                         {
@@ -150,9 +150,13 @@ namespace Scarlet.IO
 
                     if (matchedTypes.Count > 0)
                     {
-                        T fileInstance = (T)Activator.CreateInstance(matchedTypes.OrderByDescending(x => x.Weight).FirstOrDefault().Type);
-                        fileInstance.Open(reader);
-                        return fileInstance;
+                        var type = matchedTypes.OrderByDescending(x => x.Weight).FirstOrDefault()?.Type;
+                        if (type != null)
+                        {
+                            T fileInstance = (T)Activator.CreateInstance(type)!;
+                            fileInstance.Open(reader);
+                            return fileInstance;
+                        }
                     }
                 }
             }
