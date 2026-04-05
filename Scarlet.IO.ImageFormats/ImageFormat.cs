@@ -20,15 +20,17 @@ namespace Scarlet.IO.ImageFormats
 
         public Bitmap GetBitmap()
         {
-            return OnGetBitmap(0, 0);
+            return OnGetBitmap(0,
+                0);
         }
 
-        public Bitmap GetBitmap(int imageIndex, int paletteIndex)
+        public virtual Bitmap GetBitmap(int imageIndex, int paletteIndex)
         {
             if (imageIndex < 0 || (GetImageCount() != 0 && imageIndex >= GetImageCount())) throw new IndexOutOfRangeException("Image index out of range");
             if (paletteIndex < 0 || (GetPaletteCount() != 0 && paletteIndex >= GetPaletteCount())) throw new IndexOutOfRangeException("Palette index out of range");
 
-            return OnGetBitmap(imageIndex, paletteIndex);
+            return OnGetBitmap(imageIndex,
+                paletteIndex);
         }
 
         public IEnumerable<Bitmap> GetBitmaps(int paletteIndex)
@@ -36,7 +38,8 @@ namespace Scarlet.IO.ImageFormats
             if (paletteIndex < 0 || (GetPaletteCount() != 0 && paletteIndex >= GetPaletteCount())) throw new IndexOutOfRangeException("Palette index out of range");
 
             List<Bitmap> images = new List<Bitmap>();
-            for (int i = 0; i < GetImageCount(); i++) images.Add(OnGetBitmap(i, paletteIndex));
+            for (int i = 0; i < GetImageCount(); i++) images.Add(OnGetBitmap(i,
+                paletteIndex));
             return images;
         }
 

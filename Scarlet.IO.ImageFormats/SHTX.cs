@@ -62,7 +62,8 @@ namespace Scarlet.IO.ImageFormats
 
         protected override Bitmap OnGetBitmap(int imageIndex, int paletteIndex)
         {
-            return imageBinary.GetBitmap(imageIndex, paletteIndex);
+            return imageBinary.GetBitmap(imageIndex,
+                paletteIndex);
         }
     }
 }

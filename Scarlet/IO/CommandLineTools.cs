@@ -34,7 +34,11 @@ namespace Scarlet.IO
             }
 
             // Split to args array
-            string[] args = argsBuilder.ToString().Split(new char[] { '\n' }, StringSplitOptions.RemoveEmptyEntries);
+            string[] args = argsBuilder.ToString().Split(new char[]
+                {
+                    '\n'
+                },
+                StringSplitOptions.RemoveEmptyEntries);
 
             // Clean the '"' signs from the args as needed.
             for (int i = 0; i < args.Length; i++)
@@ -75,7 +79,8 @@ namespace Scarlet.IO
 
                     // We remove and then set index one backwards.
                     // This is because the remove itself is going to shift everything left by 1.
-                    sb.Remove(i--, 1);
+                    sb.Remove(i--,
+                        1);
                 }
             }
 

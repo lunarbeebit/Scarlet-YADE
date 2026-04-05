@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.IO;
 using System.Drawing;
-using System.Text.Unicode;
+
 using Scarlet.Drawing;
 using Scarlet.IO;
 
@@ -145,9 +145,9 @@ namespace Scarlet.IO.ImageFormats
                         imageBinary.AddInputPalette(paletteData);
             }
 
-            return imageBinary.GetBitmap(0, forcePaletteIdx != -1 ? forcePaletteIdx : info.PaletteIndex);
+            return GetBitmap(0, forcePaletteIdx != -1 ? forcePaletteIdx : info.PaletteIndex);
         }
-
+        
         public override int GetImageCount()
         {
             return TextureInfos.Length;

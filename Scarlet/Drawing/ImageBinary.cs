@@ -9,6 +9,13 @@ using System.Runtime.InteropServices;
 
 using Scarlet.IO;
 using Scarlet.Drawing.Compression;
+using Scarlet.Drawing.PaletteCodecs;
+using Scarlet.Drawing.PixelCodecs;
+using SixLabors.ImageSharp;
+using SixLabors.ImageSharp.PixelFormats;
+using Color = System.Drawing.Color;
+using Image = SixLabors.ImageSharp.Image;
+using Rectangle = System.Drawing.Rectangle;
 
 namespace Scarlet.Drawing
 {
@@ -21,6 +28,8 @@ namespace Scarlet.Drawing
     {
         private List<byte[]> _inputPixelData = null!;
         private List<byte[]> _inputPaletteData = null!;
+        
+
 
         /// <summary>
         /// Get or set width of the input image
@@ -98,7 +107,7 @@ namespace Scarlet.Drawing
         {
             byte[] inputPixelData = new byte[inputStream.Length];
             inputStream.Seek(0, SeekOrigin.Begin);
-            inputStream.ReadExactly(inputPixelData);
+            inputStream.Read(inputPixelData, 0, inputPixelData.Length);
 
             InitializeInstance(width: width, height: height, inputPixelFormat: inputPixelFormat, inputPixelData: inputPixelData);
         }
@@ -116,7 +125,7 @@ namespace Scarlet.Drawing
         {
             byte[] inputPixelData = new byte[inputLength];
             inputStream.Seek(inputOffset, SeekOrigin.Begin);
-            inputStream.ReadExactly(inputPixelData, 0, inputLength);
+            inputStream.Read(inputPixelData, 0, inputLength);
 
             InitializeInstance(width: width, height: height, inputPixelFormat: inputPixelFormat, inputPixelData: inputPixelData);
         }
@@ -146,7 +155,7 @@ namespace Scarlet.Drawing
         {
             byte[] inputPixelData = new byte[inputStream.Length];
             inputStream.Seek(0, SeekOrigin.Begin);
-            inputStream.ReadExactly(inputPixelData);
+            inputStream.Read(inputPixelData, 0, inputPixelData.Length);
 
             InitializeInstance(width: width, height: height, inputPixelFormat: inputPixelFormat, inputEndianness: inputEndianness, inputPixelData: inputPixelData);
         }
@@ -165,7 +174,7 @@ namespace Scarlet.Drawing
         {
             byte[] inputPixelData = new byte[inputLength];
             inputStream.Seek(inputOffset, SeekOrigin.Begin);
-            inputStream.ReadExactly(inputPixelData, 0, inputLength);
+            inputStream.Read(inputPixelData, 0, inputLength);
 
             InitializeInstance(width: width, height: height, inputPixelFormat: inputPixelFormat, inputEndianness: inputEndianness, inputPixelData: inputPixelData);
         }
@@ -195,7 +204,7 @@ namespace Scarlet.Drawing
         {
             byte[] inputPixelData = new byte[inputStream.Length];
             inputStream.Seek(0, SeekOrigin.Begin);
-            inputStream.ReadExactly(inputPixelData);
+            inputStream.Read(inputPixelData, 0, inputPixelData.Length);
 
             InitializeInstance(width: width, height: height, inputPixelFormat: inputPixelFormat, outputFormat: outputFormat, inputPixelData: inputPixelData);
         }
@@ -214,7 +223,7 @@ namespace Scarlet.Drawing
         {
             byte[] inputPixelData = new byte[inputLength];
             inputStream.Seek(inputOffset, SeekOrigin.Begin);
-            inputStream.ReadExactly(inputPixelData, 0, inputLength);
+            inputStream.Read(inputPixelData, 0, inputLength);
 
             InitializeInstance(width: width, height: height, inputPixelFormat: inputPixelFormat, outputFormat: outputFormat, inputPixelData: inputPixelData);
         }
@@ -247,7 +256,7 @@ namespace Scarlet.Drawing
         public ImageBinary(int width, int height, PixelDataFormat inputPixelFormat, Endian inputEndianness, PixelDataFormat outputFormat, Endian outputEndianness, Stream inputStream)
         {
             byte[] inputPixelData = new byte[inputStream.Length];
-            inputStream.ReadExactly(inputPixelData);
+            inputStream.Read(inputPixelData, 0, inputPixelData.Length);
 
             InitializeInstance(width: width, height: height, inputPixelFormat: inputPixelFormat, inputEndianness: inputEndianness, outputFormat: outputFormat, outputEndianness: outputEndianness, inputPixelData: inputPixelData);
         }
@@ -267,7 +276,7 @@ namespace Scarlet.Drawing
         public ImageBinary(int width, int height, PixelDataFormat inputPixelFormat, Endian inputEndianness, PixelDataFormat outputFormat, Endian outputEndianness, Stream inputStream, int inputOffset, int inputLength)
         {
             byte[] inputPixelData = new byte[inputLength];
-            inputStream.ReadExactly(inputPixelData, inputOffset, inputLength);
+            inputStream.Read(inputPixelData, inputOffset, inputLength);
 
             InitializeInstance(width: width, height: height, inputPixelFormat: inputPixelFormat, inputEndianness: inputEndianness, outputFormat: outputFormat, outputEndianness: outputEndianness, inputPixelData: inputPixelData);
         }
@@ -389,6 +398,7 @@ namespace Scarlet.Drawing
         {
             return GetBitmap(0, 0);
         }
+        
 
         /// <summary>
         /// Generates a bitmap (ARGB8888, Indexed 4bpp, or Indexed 8bpp), using this instance's image information and the specified image and palette indices
@@ -400,30 +410,22 @@ namespace Scarlet.Drawing
         {
             ValidateImageProperties();
 
-            PixelFormat imagePixelFormat;
+            PixelCodec imagePixelFormat;
+            PaletteCodec imagePaletteFormat;
 
-            bool isIndexed = ((InputPixelFormat & PixelDataFormat.MaskChannels) == PixelDataFormat.ChannelsIndexed);
 
             byte[] inputPixels = GetInputPixels(imageIndex);
 
             byte[]? pixelData = null;
             Color[]? palette = null;
-
-            if (!isIndexed)
-            {
-                imagePixelFormat = PixelFormat.Format32bppArgb;
-                pixelData = ConvertPixelDataToArgb8888(inputPixels, InputPixelFormat);
-                pixelData = ApplyFilterToArgb8888(PhysicalWidth, PhysicalHeight, OutputFormat, pixelData);
-            }
-            else
-            {
-                imagePixelFormat = ((InputPixelFormat & PixelDataFormat.MaskBpp) == PixelDataFormat.Bpp4 ? PixelFormat.Format4bppIndexed : PixelFormat.Format8bppIndexed);
-                pixelData = ReadPixelDataIndexed(inputPixels, InputPixelFormat);
-                palette = ReadPaletteData(GetInputPalette(paletteIndex), InputPixelFormat, InputPaletteFormat);
-            }
-
+            
+            
+            pixelData = ReadPixelDataIndexed(inputPixels, InputPixelFormat);
+            palette = ReadPaletteData(GetInputPalette(paletteIndex), InputPixelFormat, InputPaletteFormat);
+            
+            var testImage = Image.LoadPixelData<Rgba32>(DecodeTexture(inputPixels, GetInputPalette(paletteIndex)), Width, Height);
             Bitmap image = new Bitmap(PhysicalWidth, PhysicalHeight, imagePixelFormat);
-            BitmapData bmpData = image.LockBits(new Rectangle(0, 0, image.Width, image.Height), ImageLockMode.ReadWrite, image.PixelFormat);
+            //BitmapData bmpData = image.LockBits(new Rectangle(0, 0, image.Width, image.Height), ImageLockMode.ReadWrite, image.PixelFormat);
 
             byte[] pixelsForBmp = new byte[bmpData.Height * bmpData.Stride];
             int bitsPerPixel = Bitmap.GetPixelFormatSize(image.PixelFormat);
@@ -450,18 +452,66 @@ namespace Scarlet.Drawing
                 Buffer.BlockCopy(pixelData, srcOffset, pixelsForBmp, dstOffset, copySize);
             }
 
+            
             if (isIndexed && palette != null)
             {
                 ColorPalette imagePalette = image.Palette;
                 Array.Copy(palette, imagePalette.Entries, palette.Length);
                 image.Palette = imagePalette;
             }
+            
 
             Marshal.Copy(pixelsForBmp, 0, bmpData.Scan0, pixelsForBmp.Length);
             image.UnlockBits(bmpData);
 
             return image.Clone(new Rectangle(0, 0, Width, Height), image.PixelFormat);
         }
+        
+        private byte[] DecodeTexture(byte[]? inputPixels, byte[]? paletteData)
+        {
+            var pixelCodec = PixelCodecFactory.Create(InputPixelFormat);
+            var paletteCodec = PaletteCodecFactory.Create(InputPaletteFormat);
+            // Verify that a palette codec (if required) and pixel codec have been set.
+            if (pixelCodec is null)
+                throw new NotSupportedException($"Pixel format {InputPixelFormat:X} is not supported for decoding.");
+            if (paletteCodec is null && pixelCodec.PaletteEntries != 0)
+                throw new NotSupportedException($"Palette format {InputPaletteFormat:X} is not supported for decoding.");
+
+            if (paletteData is not null) // The texture contains an embedded palette
+                pixelCodec.Palette = paletteCodec?.Decode(paletteData);
+
+            if (isSwizzled)
+                if (textureData != null)
+                    return pixelCodec.Decode(Unswizzle(textureData, stride, pixelsPerColumn), Width, Height, pixelsPerRow,
+                        pixelsPerColumn);
+
+            return inputPixels != null ? pixelCodec.Decode(textureData, Width, Height, pixelsPerRow, pixelsPerColumn) : throw new ArgumentNullException(nameof(textureData), "Texture data can't be null.");
+        }
+        
+
+    private static byte[] Unswizzle(byte[] source, int stride, int pixelsPerColumn)
+    {
+        var destinationIndex = 0;
+
+        var destination = new byte[stride * pixelsPerColumn];
+
+        var rowblocks = stride / 16;
+
+        for (var y = 0; y < pixelsPerColumn; y++)
+        for (var x = 0; x < stride; x++)
+        {
+            var blockX = x / 16;
+            var blockY = y / 8;
+
+            var blockIndex = blockX + blockY * rowblocks;
+            var blockAddress = blockIndex * 16 * 8;
+
+            destination[destinationIndex] = source[blockAddress + (x - blockX * 16) + (y - blockY * 8) * 16];
+            destinationIndex++;
+        }
+
+        return destination;
+    }
 
         private bool IsValidPixelDataFormat(PixelDataFormat fmt)
         {
@@ -1143,7 +1193,7 @@ namespace Scarlet.Drawing
                     if (outputEndian == EndianBinaryReader.NativeEndianness)
                         outputValueBytes = BitConverter.GetBytes(outputValue);
                     else
-                        outputValueBytes = BitConverter.GetBytes(outputValue << (32 - outputBpp)).Reverse().ToArray();
+                        outputValueBytes = ((IEnumerable<byte>)BitConverter.GetBytes(outputValue << (32 - outputBpp))).Reverse().ToArray();
 
                     Buffer.BlockCopy(outputValueBytes, 0, outputData, j, (outputBpp / 8));
                 }

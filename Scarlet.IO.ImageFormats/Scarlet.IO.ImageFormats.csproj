@@ -5,6 +5,7 @@
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
     <LangVersion>default</LangVersion>
     <Nullable>disable</Nullable>
+    <SixLaborsLicenseFile>..\..\..\sixlabors.lic</SixLaborsLicenseFile>
   </PropertyGroup>
   <PropertyGroup>
     <RunPostBuildEvent>Always</RunPostBuildEvent>
@@ -14,7 +15,7 @@
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Managed.System.Drawing" Version="4.0.12-preview.1" />
-    <PackageReference Include="SixLabors.ImageSharp" Version="3.1.12" />
+    <PackageReference Include="SixLabors.ImageSharp" Version="4.0.0-alpha.0.88" />
     <PackageReference Include="System.Data.DataSetExtensions" Version="4.5.0" />
     <PackageReference Include="System.Formats.Nrbf" Version="10.0.5" />
   </ItemGroup>

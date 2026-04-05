@@ -47,14 +47,24 @@ namespace Scarlet.Drawing.Compression
                 {
                     ushort[] decompressedBlock = new ushort[(4 * 4) * 4];
                     if ((inputFormat & PixelDataFormat.MaskSpecial) == PixelDataFormat.SpecialFormatBPTC_Float)
-                        DecompressBlockBPTCFloatShared(reader, false, ref decompressedBlock);
+                        DecompressBlockBPTCFloatShared(reader,
+                            false,
+                            ref decompressedBlock);
                     else if ((inputFormat & PixelDataFormat.MaskSpecial) == PixelDataFormat.SpecialFormatBPTC_SignedFloat)
-                        DecompressBlockBPTCFloatShared(reader, true, ref decompressedBlock);
+                        DecompressBlockBPTCFloatShared(reader,
+                            true,
+                            ref decompressedBlock);
                     else
                         throw new Exception("Trying to decode BPTC Float/SignedFloat with format set to non-BPTC");
 
                     int rx, ry;
-                    pixelOrderingFunc(x / 4, y / 4, width / 4, height / 4, inputFormat, out rx, out ry);
+                    pixelOrderingFunc(x / 4,
+                        y / 4,
+                        width / 4,
+                        height / 4,
+                        inputFormat,
+                        out rx,
+                        out ry);
                     rx *= 4; ry *= 4;
 
                     for (int py = 0; py < 4; py++)
@@ -91,7 +101,9 @@ namespace Scarlet.Drawing.Compression
             {
                 exp += 0x1C000;
                 if (mant == 0 && exp > 0x1C400)
-                    return BitConverter.ToSingle(BitConverter.GetBytes((((uint)hbits & 0x8000) << 16) | (exp << 13) | 0x3FF), 0);
+                    return BitConverter.ToSingle(
+                        BitConverter.GetBytes((((uint)hbits & 0x8000) << 16) | (exp << 13) | 0x3FF),
+                        0);
             }
             else if (mant != 0)
             {
@@ -103,7 +115,8 @@ namespace Scarlet.Drawing.Compression
                 } while ((mant & 0x400) == 0);
                 mant &= 0x3FF;
             }
-            return BitConverter.ToSingle(BitConverter.GetBytes((((uint)hbits & 0x8000) << 16) | ((exp | mant) << 13)), 0);
+            return BitConverter.ToSingle(BitConverter.GetBytes((((uint)hbits & 0x8000) << 16) | ((exp | mant) << 13)),
+                0);
         }
 
         /* All following ported/adapted from detex */
@@ -116,9 +129,11 @@ namespace Scarlet.Drawing.Compression
 
         static int ExtractMode(detexBlock128 block)
         {
-            int mode = (int)BPTC.detexBlock128ExtractBits(block, 2);
+            int mode = (int)BPTC.detexBlock128ExtractBits(block,
+                2);
             if (mode < 2) return mode;
-            return map_mode_table[mode | (int)(BPTC.detexBlock128ExtractBits(block, 3) << 2)];
+            return map_mode_table[mode | (int)(BPTC.detexBlock128ExtractBits(block,
+                3) << 2)];
         }
 
         static int GetPartitionIndex(int nu_subsets, uint partition_set_id, int i)
@@ -216,27 +231,69 @@ namespace Scarlet.Drawing.Compression
                 case 0:
                     // m[1:0],g2[4],b2[4],b3[4],r0[9:0],g0[9:0],b0[9:0],r1[4:0],g3[4],g2[3:0],
                     // g1[4:0],b3[0],g3[3:0],b1[4:0],b3[1],b2[3:0],r2[4:0],b3[2],r3[4:0],b3[3]
-                    g[2] = (BPTC.detexGetBits64(data0, 2, 2) << 4);
-                    b[2] = (BPTC.detexGetBits64(data0, 3, 3) << 4);
-                    b[3] = (BPTC.detexGetBits64(data0, 4, 4) << 4);
-                    r[0] = (BPTC.detexGetBits64(data0, 5, 14));
-                    g[0] = (BPTC.detexGetBits64(data0, 15, 24));
-                    b[0] = (BPTC.detexGetBits64(data0, 25, 34));
-                    r[1] = (BPTC.detexGetBits64(data0, 35, 39));
-                    g[3] = (BPTC.detexGetBits64(data0, 40, 40) << 4);
-                    g[2] |= (BPTC.detexGetBits64(data0, 41, 44));
-                    g[1] = (BPTC.detexGetBits64(data0, 45, 49));
-                    b[3] |= (BPTC.detexGetBits64(data0, 50, 50));
-                    g[3] |= (BPTC.detexGetBits64(data0, 51, 54));
-                    b[1] = (BPTC.detexGetBits64(data0, 55, 59));
-                    b[3] |= (BPTC.detexGetBits64(data0, 60, 60) << 1);
-                    b[2] |= (BPTC.detexGetBits64(data0, 61, 63));
-                    b[2] |= (BPTC.detexGetBits64(data1, 0, 0) << 3);
-                    r[2] = (BPTC.detexGetBits64(data1, 1, 5));
-                    b[3] |= (BPTC.detexGetBits64(data1, 6, 6) << 2);
-                    r[3] = (BPTC.detexGetBits64(data1, 7, 11));
-                    b[3] |= (BPTC.detexGetBits64(data1, 12, 12) << 3);
-                    partition_set_id = (BPTC.detexGetBits64(data1, 13, 17));
+                    g[2] = (BPTC.detexGetBits64(data0,
+                        2,
+                        2) << 4);
+                    b[2] = (BPTC.detexGetBits64(data0,
+                        3,
+                        3) << 4);
+                    b[3] = (BPTC.detexGetBits64(data0,
+                        4,
+                        4) << 4);
+                    r[0] = (BPTC.detexGetBits64(data0,
+                        5,
+                        14));
+                    g[0] = (BPTC.detexGetBits64(data0,
+                        15,
+                        24));
+                    b[0] = (BPTC.detexGetBits64(data0,
+                        25,
+                        34));
+                    r[1] = (BPTC.detexGetBits64(data0,
+                        35,
+                        39));
+                    g[3] = (BPTC.detexGetBits64(data0,
+                        40,
+                        40) << 4);
+                    g[2] |= (BPTC.detexGetBits64(data0,
+                        41,
+                        44));
+                    g[1] = (BPTC.detexGetBits64(data0,
+                        45,
+                        49));
+                    b[3] |= (BPTC.detexGetBits64(data0,
+                        50,
+                        50));
+                    g[3] |= (BPTC.detexGetBits64(data0,
+                        51,
+                        54));
+                    b[1] = (BPTC.detexGetBits64(data0,
+                        55,
+                        59));
+                    b[3] |= (BPTC.detexGetBits64(data0,
+                        60,
+                        60) << 1);
+                    b[2] |= (BPTC.detexGetBits64(data0,
+                        61,
+                        63));
+                    b[2] |= (BPTC.detexGetBits64(data1,
+                        0,
+                        0) << 3);
+                    r[2] = (BPTC.detexGetBits64(data1,
+                        1,
+                        5));
+                    b[3] |= (BPTC.detexGetBits64(data1,
+                        6,
+                        6) << 2);
+                    r[3] = (BPTC.detexGetBits64(data1,
+                        7,
+                        11));
+                    b[3] |= (BPTC.detexGetBits64(data1,
+                        12,
+                        12) << 3);
+                    partition_set_id = (BPTC.detexGetBits64(data1,
+                        13,
+                        17));
                     block.index = 64 + 18;
                     delta_bits_r = delta_bits_g = delta_bits_b = 5;
                     break;
@@ -244,57 +301,147 @@ namespace Scarlet.Drawing.Compression
                     // m[1:0],g2[5],g3[4],g3[5],r0[6:0],b3[0],b3[1],b2[4],g0[6:0],b2[5],b3[2],
                     // g2[4],b0[6:0],b3[3],b3[5],b3[4],r1[5:0],g2[3:0],g1[5:0],g3[3:0],b1[5:0],
                     // b2[3:0],r2[5:0],r3[5:0]
-                    g[2] = (BPTC.detexGetBits64(data0, 2, 2) << 5);
-                    g[3] = (BPTC.detexGetBits64(data0, 3, 3) << 4);
-                    g[3] |= (BPTC.detexGetBits64(data0, 4, 4) << 5);
-                    r[0] = (BPTC.detexGetBits64(data0, 5, 11));
-                    b[3] = (BPTC.detexGetBits64(data0, 12, 12));
-                    b[3] |= (BPTC.detexGetBits64(data0, 13, 13) << 1);
-                    b[2] = (BPTC.detexGetBits64(data0, 14, 14) << 4);
-                    g[0] = (BPTC.detexGetBits64(data0, 15, 21));
-                    b[2] |= (BPTC.detexGetBits64(data0, 22, 22) << 5);
-                    b[3] |= (BPTC.detexGetBits64(data0, 23, 23) << 2);
-                    g[2] |= (BPTC.detexGetBits64(data0, 24, 24) << 4);
-                    b[0] = (BPTC.detexGetBits64(data0, 25, 31));
-                    b[3] |= (BPTC.detexGetBits64(data0, 32, 32) << 3);
-                    b[3] |= (BPTC.detexGetBits64(data0, 33, 33) << 5);
-                    b[3] |= (BPTC.detexGetBits64(data0, 34, 34) << 4);
-                    r[1] = (BPTC.detexGetBits64(data0, 35, 40));
-                    g[2] |= (BPTC.detexGetBits64(data0, 41, 44));
-                    g[1] = (BPTC.detexGetBits64(data0, 45, 50));
-                    g[3] |= (BPTC.detexGetBits64(data0, 51, 54));
-                    b[1] = (BPTC.detexGetBits64(data0, 55, 60));
-                    b[2] |= (BPTC.detexGetBits64(data0, 61, 63));
-                    b[2] |= (BPTC.detexGetBits64(data1, 0, 0) << 3);
-                    r[2] = (BPTC.detexGetBits64(data1, 1, 6));
-                    r[3] = (BPTC.detexGetBits64(data1, 7, 12));
-                    partition_set_id = (BPTC.detexGetBits64(data1, 13, 17));
+                    g[2] = (BPTC.detexGetBits64(data0,
+                        2,
+                        2) << 5);
+                    g[3] = (BPTC.detexGetBits64(data0,
+                        3,
+                        3) << 4);
+                    g[3] |= (BPTC.detexGetBits64(data0,
+                        4,
+                        4) << 5);
+                    r[0] = (BPTC.detexGetBits64(data0,
+                        5,
+                        11));
+                    b[3] = (BPTC.detexGetBits64(data0,
+                        12,
+                        12));
+                    b[3] |= (BPTC.detexGetBits64(data0,
+                        13,
+                        13) << 1);
+                    b[2] = (BPTC.detexGetBits64(data0,
+                        14,
+                        14) << 4);
+                    g[0] = (BPTC.detexGetBits64(data0,
+                        15,
+                        21));
+                    b[2] |= (BPTC.detexGetBits64(data0,
+                        22,
+                        22) << 5);
+                    b[3] |= (BPTC.detexGetBits64(data0,
+                        23,
+                        23) << 2);
+                    g[2] |= (BPTC.detexGetBits64(data0,
+                        24,
+                        24) << 4);
+                    b[0] = (BPTC.detexGetBits64(data0,
+                        25,
+                        31));
+                    b[3] |= (BPTC.detexGetBits64(data0,
+                        32,
+                        32) << 3);
+                    b[3] |= (BPTC.detexGetBits64(data0,
+                        33,
+                        33) << 5);
+                    b[3] |= (BPTC.detexGetBits64(data0,
+                        34,
+                        34) << 4);
+                    r[1] = (BPTC.detexGetBits64(data0,
+                        35,
+                        40));
+                    g[2] |= (BPTC.detexGetBits64(data0,
+                        41,
+                        44));
+                    g[1] = (BPTC.detexGetBits64(data0,
+                        45,
+                        50));
+                    g[3] |= (BPTC.detexGetBits64(data0,
+                        51,
+                        54));
+                    b[1] = (BPTC.detexGetBits64(data0,
+                        55,
+                        60));
+                    b[2] |= (BPTC.detexGetBits64(data0,
+                        61,
+                        63));
+                    b[2] |= (BPTC.detexGetBits64(data1,
+                        0,
+                        0) << 3);
+                    r[2] = (BPTC.detexGetBits64(data1,
+                        1,
+                        6));
+                    r[3] = (BPTC.detexGetBits64(data1,
+                        7,
+                        12));
+                    partition_set_id = (BPTC.detexGetBits64(data1,
+                        13,
+                        17));
                     block.index = 64 + 18;
                     delta_bits_r = delta_bits_g = delta_bits_b = 6;
                     break;
                 case 2:
                     // m[4:0],r0[9:0],g0[9:0],b0[9:0],r1[4:0],r0[10],g2[3:0],g1[3:0],g0[10],
                     // b3[0],g3[3:0],b1[3:0],b0[10],b3[1],b2[3:0],r2[4:0],b3[2],r3[4:0],b3[3]
-                    r[0] = (BPTC.detexGetBits64(data0, 5, 14));
-                    g[0] = (BPTC.detexGetBits64(data0, 15, 24));
-                    b[0] = (BPTC.detexGetBits64(data0, 25, 34));
-                    r[1] = (BPTC.detexGetBits64(data0, 35, 39));
-                    r[0] |= (BPTC.detexGetBits64(data0, 40, 40) << 10);
-                    g[2] = (BPTC.detexGetBits64(data0, 41, 44));
-                    g[1] = (BPTC.detexGetBits64(data0, 45, 48));
-                    g[0] |= (BPTC.detexGetBits64(data0, 49, 49) << 10);
-                    b[3] = (BPTC.detexGetBits64(data0, 50, 50));
-                    g[3] = (BPTC.detexGetBits64(data0, 51, 54));
-                    b[1] = (BPTC.detexGetBits64(data0, 55, 58));
-                    b[0] |= (BPTC.detexGetBits64(data0, 59, 59) << 10);
-                    b[3] |= (BPTC.detexGetBits64(data0, 60, 60) << 1);
-                    b[2] = (BPTC.detexGetBits64(data0, 61, 63));
-                    b[2] |= (BPTC.detexGetBits64(data1, 0, 0) << 3);
-                    r[2] = (BPTC.detexGetBits64(data1, 1, 5));
-                    b[3] |= (BPTC.detexGetBits64(data1, 6, 6) << 2);
-                    r[3] = (BPTC.detexGetBits64(data1, 7, 11));
-                    b[3] |= (BPTC.detexGetBits64(data1, 12, 12) << 3);
-                    partition_set_id = (BPTC.detexGetBits64(data1, 13, 17));
+                    r[0] = (BPTC.detexGetBits64(data0,
+                        5,
+                        14));
+                    g[0] = (BPTC.detexGetBits64(data0,
+                        15,
+                        24));
+                    b[0] = (BPTC.detexGetBits64(data0,
+                        25,
+                        34));
+                    r[1] = (BPTC.detexGetBits64(data0,
+                        35,
+                        39));
+                    r[0] |= (BPTC.detexGetBits64(data0,
+                        40,
+                        40) << 10);
+                    g[2] = (BPTC.detexGetBits64(data0,
+                        41,
+                        44));
+                    g[1] = (BPTC.detexGetBits64(data0,
+                        45,
+                        48));
+                    g[0] |= (BPTC.detexGetBits64(data0,
+                        49,
+                        49) << 10);
+                    b[3] = (BPTC.detexGetBits64(data0,
+                        50,
+                        50));
+                    g[3] = (BPTC.detexGetBits64(data0,
+                        51,
+                        54));
+                    b[1] = (BPTC.detexGetBits64(data0,
+                        55,
+                        58));
+                    b[0] |= (BPTC.detexGetBits64(data0,
+                        59,
+                        59) << 10);
+                    b[3] |= (BPTC.detexGetBits64(data0,
+                        60,
+                        60) << 1);
+                    b[2] = (BPTC.detexGetBits64(data0,
+                        61,
+                        63));
+                    b[2] |= (BPTC.detexGetBits64(data1,
+                        0,
+                        0) << 3);
+                    r[2] = (BPTC.detexGetBits64(data1,
+                        1,
+                        5));
+                    b[3] |= (BPTC.detexGetBits64(data1,
+                        6,
+                        6) << 2);
+                    r[3] = (BPTC.detexGetBits64(data1,
+                        7,
+                        11));
+                    b[3] |= (BPTC.detexGetBits64(data1,
+                        12,
+                        12) << 3);
+                    partition_set_id = (BPTC.detexGetBits64(data1,
+                        13,
+                        17));
                     block.index = 64 + 18;
                     delta_bits_r = 5;
                     delta_bits_g = delta_bits_b = 4;
@@ -303,28 +450,72 @@ namespace Scarlet.Drawing.Compression
                         // m[4:0],r0[9:0],g0[9:0],b0[9:0],r1[3:0],r0[10],g3[4],g2[3:0],g1[4:0],
                         // g0[10],g3[3:0],b1[3:0],b0[10],b3[1],b2[3:0],r2[3:0],b3[0],b3[2],r3[3:0],
                         // g2[4],b3[3]
-                    r[0] = (BPTC.detexGetBits64(data0, 5, 14));
-                    g[0] = (BPTC.detexGetBits64(data0, 15, 24));
-                    b[0] = (BPTC.detexGetBits64(data0, 25, 34));
-                    r[1] = (BPTC.detexGetBits64(data0, 35, 38));
-                    r[0] |= (BPTC.detexGetBits64(data0, 39, 39) << 10);
-                    g[3] = (BPTC.detexGetBits64(data0, 40, 40) << 4);
-                    g[2] = (BPTC.detexGetBits64(data0, 41, 44));
-                    g[1] = (BPTC.detexGetBits64(data0, 45, 49));
-                    g[0] |= (BPTC.detexGetBits64(data0, 50, 50) << 10);
-                    g[3] |= (BPTC.detexGetBits64(data0, 51, 54));
-                    b[1] = (BPTC.detexGetBits64(data0, 55, 58));
-                    b[0] |= (BPTC.detexGetBits64(data0, 59, 59) << 10);
-                    b[3] = (BPTC.detexGetBits64(data0, 60, 60) << 1);
-                    b[2] = (BPTC.detexGetBits64(data0, 61, 63));
-                    b[2] |= (BPTC.detexGetBits64(data1, 0, 0) << 3);
-                    r[2] = (BPTC.detexGetBits64(data1, 1, 4));
-                    b[3] |= (BPTC.detexGetBits64(data1, 5, 5));
-                    b[3] |= (BPTC.detexGetBits64(data1, 6, 6) << 2);
-                    r[3] = (BPTC.detexGetBits64(data1, 7, 10));
-                    g[2] |= (BPTC.detexGetBits64(data1, 11, 11) << 4);
-                    b[3] |= (BPTC.detexGetBits64(data1, 12, 12) << 3);
-                    partition_set_id = (BPTC.detexGetBits64(data1, 13, 17));
+                    r[0] = (BPTC.detexGetBits64(data0,
+                        5,
+                        14));
+                    g[0] = (BPTC.detexGetBits64(data0,
+                        15,
+                        24));
+                    b[0] = (BPTC.detexGetBits64(data0,
+                        25,
+                        34));
+                    r[1] = (BPTC.detexGetBits64(data0,
+                        35,
+                        38));
+                    r[0] |= (BPTC.detexGetBits64(data0,
+                        39,
+                        39) << 10);
+                    g[3] = (BPTC.detexGetBits64(data0,
+                        40,
+                        40) << 4);
+                    g[2] = (BPTC.detexGetBits64(data0,
+                        41,
+                        44));
+                    g[1] = (BPTC.detexGetBits64(data0,
+                        45,
+                        49));
+                    g[0] |= (BPTC.detexGetBits64(data0,
+                        50,
+                        50) << 10);
+                    g[3] |= (BPTC.detexGetBits64(data0,
+                        51,
+                        54));
+                    b[1] = (BPTC.detexGetBits64(data0,
+                        55,
+                        58));
+                    b[0] |= (BPTC.detexGetBits64(data0,
+                        59,
+                        59) << 10);
+                    b[3] = (BPTC.detexGetBits64(data0,
+                        60,
+                        60) << 1);
+                    b[2] = (BPTC.detexGetBits64(data0,
+                        61,
+                        63));
+                    b[2] |= (BPTC.detexGetBits64(data1,
+                        0,
+                        0) << 3);
+                    r[2] = (BPTC.detexGetBits64(data1,
+                        1,
+                        4));
+                    b[3] |= (BPTC.detexGetBits64(data1,
+                        5,
+                        5));
+                    b[3] |= (BPTC.detexGetBits64(data1,
+                        6,
+                        6) << 2);
+                    r[3] = (BPTC.detexGetBits64(data1,
+                        7,
+                        10));
+                    g[2] |= (BPTC.detexGetBits64(data1,
+                        11,
+                        11) << 4);
+                    b[3] |= (BPTC.detexGetBits64(data1,
+                        12,
+                        12) << 3);
+                    partition_set_id = (BPTC.detexGetBits64(data1,
+                        13,
+                        17));
                     block.index = 64 + 18;
                     delta_bits_r = delta_bits_b = 4;
                     delta_bits_g = 5;
@@ -333,28 +524,72 @@ namespace Scarlet.Drawing.Compression
                         // m[4:0],r0[9:0],g0[9:0],b0[9:0],r1[3:0],r0[10],b2[4],g2[3:0],g1[3:0],
                         // g0[10],b3[0],g3[3:0],b1[4:0],b0[10],b2[3:0],r2[3:0],b3[1],b3[2],r3[3:0],
                         // b3[4],b3[3]
-                    r[0] = (BPTC.detexGetBits64(data0, 5, 14));
-                    g[0] = (BPTC.detexGetBits64(data0, 15, 24));
-                    b[0] = (BPTC.detexGetBits64(data0, 25, 34));
-                    r[1] = (BPTC.detexGetBits64(data0, 35, 38));
-                    r[0] |= (BPTC.detexGetBits64(data0, 39, 39) << 10);
-                    b[2] = (BPTC.detexGetBits64(data0, 40, 40) << 4);
-                    g[2] = (BPTC.detexGetBits64(data0, 41, 44));
-                    g[1] = (BPTC.detexGetBits64(data0, 45, 48));
-                    g[0] |= (BPTC.detexGetBits64(data0, 49, 49) << 10);
-                    b[3] = (BPTC.detexGetBits64(data0, 50, 50));
-                    g[3] = (BPTC.detexGetBits64(data0, 51, 54));
-                    b[1] = (BPTC.detexGetBits64(data0, 55, 59));
-                    b[0] |= (BPTC.detexGetBits64(data0, 60, 60) << 10);
-                    b[2] |= (BPTC.detexGetBits64(data0, 61, 63));
-                    b[2] |= (BPTC.detexGetBits64(data1, 0, 0) << 3);
-                    r[2] = (BPTC.detexGetBits64(data1, 1, 4));
-                    b[3] |= (BPTC.detexGetBits64(data1, 5, 5) << 1);
-                    b[3] |= (BPTC.detexGetBits64(data1, 6, 6) << 2);
-                    r[3] = (BPTC.detexGetBits64(data1, 7, 10));
-                    b[3] |= (BPTC.detexGetBits64(data1, 11, 11) << 4);
-                    b[3] |= (BPTC.detexGetBits64(data1, 12, 12) << 3);
-                    partition_set_id = (BPTC.detexGetBits64(data1, 13, 17));
+                    r[0] = (BPTC.detexGetBits64(data0,
+                        5,
+                        14));
+                    g[0] = (BPTC.detexGetBits64(data0,
+                        15,
+                        24));
+                    b[0] = (BPTC.detexGetBits64(data0,
+                        25,
+                        34));
+                    r[1] = (BPTC.detexGetBits64(data0,
+                        35,
+                        38));
+                    r[0] |= (BPTC.detexGetBits64(data0,
+                        39,
+                        39) << 10);
+                    b[2] = (BPTC.detexGetBits64(data0,
+                        40,
+                        40) << 4);
+                    g[2] = (BPTC.detexGetBits64(data0,
+                        41,
+                        44));
+                    g[1] = (BPTC.detexGetBits64(data0,
+                        45,
+                        48));
+                    g[0] |= (BPTC.detexGetBits64(data0,
+                        49,
+                        49) << 10);
+                    b[3] = (BPTC.detexGetBits64(data0,
+                        50,
+                        50));
+                    g[3] = (BPTC.detexGetBits64(data0,
+                        51,
+                        54));
+                    b[1] = (BPTC.detexGetBits64(data0,
+                        55,
+                        59));
+                    b[0] |= (BPTC.detexGetBits64(data0,
+                        60,
+                        60) << 10);
+                    b[2] |= (BPTC.detexGetBits64(data0,
+                        61,
+                        63));
+                    b[2] |= (BPTC.detexGetBits64(data1,
+                        0,
+                        0) << 3);
+                    r[2] = (BPTC.detexGetBits64(data1,
+                        1,
+                        4));
+                    b[3] |= (BPTC.detexGetBits64(data1,
+                        5,
+                        5) << 1);
+                    b[3] |= (BPTC.detexGetBits64(data1,
+                        6,
+                        6) << 2);
+                    r[3] = (BPTC.detexGetBits64(data1,
+                        7,
+                        10));
+                    b[3] |= (BPTC.detexGetBits64(data1,
+                        11,
+                        11) << 4);
+                    b[3] |= (BPTC.detexGetBits64(data1,
+                        12,
+                        12) << 3);
+                    partition_set_id = (BPTC.detexGetBits64(data1,
+                        13,
+                        17));
                     block.index = 64 + 18;
                     delta_bits_r = delta_bits_g = 4;
                     delta_bits_b = 5;
@@ -362,54 +597,138 @@ namespace Scarlet.Drawing.Compression
                 case 5: // Original mode 14
                         // m[4:0],r0[8:0],b2[4],g0[8:0],g2[4],b0[8:0],b3[4],r1[4:0],g3[4],g2[3:0],
                         // g1[4:0],b3[0],g3[3:0],b1[4:0],b3[1],b2[3:0],r2[4:0],b3[2],r3[4:0],b3[3]
-                    r[0] = (BPTC.detexGetBits64(data0, 5, 13));
-                    b[2] = (BPTC.detexGetBits64(data0, 14, 14) << 4);
-                    g[0] = (BPTC.detexGetBits64(data0, 15, 23));
-                    g[2] = (BPTC.detexGetBits64(data0, 24, 24) << 4);
-                    b[0] = (BPTC.detexGetBits64(data0, 25, 33));
-                    b[3] = (BPTC.detexGetBits64(data0, 34, 34) << 4);
-                    r[1] = (BPTC.detexGetBits64(data0, 35, 39));
-                    g[3] = (BPTC.detexGetBits64(data0, 40, 40) << 4);
-                    g[2] |= (BPTC.detexGetBits64(data0, 41, 44));
-                    g[1] = (BPTC.detexGetBits64(data0, 45, 49));
-                    b[3] |= (BPTC.detexGetBits64(data0, 50, 50));
-                    g[3] |= (BPTC.detexGetBits64(data0, 51, 54));
-                    b[1] = (BPTC.detexGetBits64(data0, 55, 59));
-                    b[3] |= (BPTC.detexGetBits64(data0, 60, 60) << 1);
-                    b[2] |= (BPTC.detexGetBits64(data0, 61, 63));
-                    b[2] |= (BPTC.detexGetBits64(data1, 0, 0) << 3);
-                    r[2] = (BPTC.detexGetBits64(data1, 1, 5));
-                    b[3] |= (BPTC.detexGetBits64(data1, 6, 6) << 2);
-                    r[3] = (BPTC.detexGetBits64(data1, 7, 11));
-                    b[3] |= (BPTC.detexGetBits64(data1, 12, 12) << 3);
-                    partition_set_id = (BPTC.detexGetBits64(data1, 13, 17));
+                    r[0] = (BPTC.detexGetBits64(data0,
+                        5,
+                        13));
+                    b[2] = (BPTC.detexGetBits64(data0,
+                        14,
+                        14) << 4);
+                    g[0] = (BPTC.detexGetBits64(data0,
+                        15,
+                        23));
+                    g[2] = (BPTC.detexGetBits64(data0,
+                        24,
+                        24) << 4);
+                    b[0] = (BPTC.detexGetBits64(data0,
+                        25,
+                        33));
+                    b[3] = (BPTC.detexGetBits64(data0,
+                        34,
+                        34) << 4);
+                    r[1] = (BPTC.detexGetBits64(data0,
+                        35,
+                        39));
+                    g[3] = (BPTC.detexGetBits64(data0,
+                        40,
+                        40) << 4);
+                    g[2] |= (BPTC.detexGetBits64(data0,
+                        41,
+                        44));
+                    g[1] = (BPTC.detexGetBits64(data0,
+                        45,
+                        49));
+                    b[3] |= (BPTC.detexGetBits64(data0,
+                        50,
+                        50));
+                    g[3] |= (BPTC.detexGetBits64(data0,
+                        51,
+                        54));
+                    b[1] = (BPTC.detexGetBits64(data0,
+                        55,
+                        59));
+                    b[3] |= (BPTC.detexGetBits64(data0,
+                        60,
+                        60) << 1);
+                    b[2] |= (BPTC.detexGetBits64(data0,
+                        61,
+                        63));
+                    b[2] |= (BPTC.detexGetBits64(data1,
+                        0,
+                        0) << 3);
+                    r[2] = (BPTC.detexGetBits64(data1,
+                        1,
+                        5));
+                    b[3] |= (BPTC.detexGetBits64(data1,
+                        6,
+                        6) << 2);
+                    r[3] = (BPTC.detexGetBits64(data1,
+                        7,
+                        11));
+                    b[3] |= (BPTC.detexGetBits64(data1,
+                        12,
+                        12) << 3);
+                    partition_set_id = (BPTC.detexGetBits64(data1,
+                        13,
+                        17));
                     block.index = 64 + 18;
                     delta_bits_r = delta_bits_g = delta_bits_b = 5;
                     break;
                 case 6: // Original mode 18
                         // m[4:0],r0[7:0],g3[4],b2[4],g0[7:0],b3[2],g2[4],b0[7:0],b3[3],b3[4],
                         // r1[5:0],g2[3:0],g1[4:0],b3[0],g3[3:0],b1[4:0],b3[1],b2[3:0],r2[5:0],r3[5:0]
-                    r[0] = (BPTC.detexGetBits64(data0, 5, 12));
-                    g[3] = (BPTC.detexGetBits64(data0, 13, 13) << 4);
-                    b[2] = (BPTC.detexGetBits64(data0, 14, 14) << 4);
-                    g[0] = (BPTC.detexGetBits64(data0, 15, 22));
-                    b[3] = (BPTC.detexGetBits64(data0, 23, 23) << 2);
-                    g[2] = (BPTC.detexGetBits64(data0, 24, 24) << 4);
-                    b[0] = (BPTC.detexGetBits64(data0, 25, 32));
-                    b[3] |= (BPTC.detexGetBits64(data0, 33, 33) << 3);
-                    b[3] |= (BPTC.detexGetBits64(data0, 34, 34) << 4);
-                    r[1] = (BPTC.detexGetBits64(data0, 35, 40));
-                    g[2] |= (BPTC.detexGetBits64(data0, 41, 44));
-                    g[1] = (BPTC.detexGetBits64(data0, 45, 49));
-                    b[3] |= (BPTC.detexGetBits64(data0, 50, 50));
-                    g[3] |= (BPTC.detexGetBits64(data0, 51, 54));
-                    b[1] = (BPTC.detexGetBits64(data0, 55, 59));
-                    b[3] |= (BPTC.detexGetBits64(data0, 60, 60) << 1);
-                    b[2] |= (BPTC.detexGetBits64(data0, 61, 63));
-                    b[2] |= (BPTC.detexGetBits64(data1, 0, 0) << 3);
-                    r[2] = (BPTC.detexGetBits64(data1, 1, 6));
-                    r[3] = (BPTC.detexGetBits64(data1, 7, 12));
-                    partition_set_id = (BPTC.detexGetBits64(data1, 13, 17));
+                    r[0] = (BPTC.detexGetBits64(data0,
+                        5,
+                        12));
+                    g[3] = (BPTC.detexGetBits64(data0,
+                        13,
+                        13) << 4);
+                    b[2] = (BPTC.detexGetBits64(data0,
+                        14,
+                        14) << 4);
+                    g[0] = (BPTC.detexGetBits64(data0,
+                        15,
+                        22));
+                    b[3] = (BPTC.detexGetBits64(data0,
+                        23,
+                        23) << 2);
+                    g[2] = (BPTC.detexGetBits64(data0,
+                        24,
+                        24) << 4);
+                    b[0] = (BPTC.detexGetBits64(data0,
+                        25,
+                        32));
+                    b[3] |= (BPTC.detexGetBits64(data0,
+                        33,
+                        33) << 3);
+                    b[3] |= (BPTC.detexGetBits64(data0,
+                        34,
+                        34) << 4);
+                    r[1] = (BPTC.detexGetBits64(data0,
+                        35,
+                        40));
+                    g[2] |= (BPTC.detexGetBits64(data0,
+                        41,
+                        44));
+                    g[1] = (BPTC.detexGetBits64(data0,
+                        45,
+                        49));
+                    b[3] |= (BPTC.detexGetBits64(data0,
+                        50,
+                        50));
+                    g[3] |= (BPTC.detexGetBits64(data0,
+                        51,
+                        54));
+                    b[1] = (BPTC.detexGetBits64(data0,
+                        55,
+                        59));
+                    b[3] |= (BPTC.detexGetBits64(data0,
+                        60,
+                        60) << 1);
+                    b[2] |= (BPTC.detexGetBits64(data0,
+                        61,
+                        63));
+                    b[2] |= (BPTC.detexGetBits64(data1,
+                        0,
+                        0) << 3);
+                    r[2] = (BPTC.detexGetBits64(data1,
+                        1,
+                        6));
+                    r[3] = (BPTC.detexGetBits64(data1,
+                        7,
+                        12));
+                    partition_set_id = (BPTC.detexGetBits64(data1,
+                        13,
+                        17));
                     block.index = 64 + 18;
                     delta_bits_r = 6;
                     delta_bits_g = delta_bits_b = 5;
@@ -418,29 +737,75 @@ namespace Scarlet.Drawing.Compression
                         // m[4:0],r0[7:0],b3[0],b2[4],g0[7:0],g2[5],g2[4],b0[7:0],g3[5],b3[4],
                         // r1[4:0],g3[4],g2[3:0],g1[5:0],g3[3:0],b1[4:0],b3[1],b2[3:0],r2[4:0],
                         // b3[2],r3[4:0],b3[3]
-                    r[0] = (BPTC.detexGetBits64(data0, 5, 12));
-                    b[3] = (BPTC.detexGetBits64(data0, 13, 13));
-                    b[2] = (BPTC.detexGetBits64(data0, 14, 14) << 4);
-                    g[0] = (BPTC.detexGetBits64(data0, 15, 22));
-                    g[2] = (BPTC.detexGetBits64(data0, 23, 23) << 5);
-                    g[2] |= (BPTC.detexGetBits64(data0, 24, 24) << 4);
-                    b[0] = (BPTC.detexGetBits64(data0, 25, 32));
-                    g[3] = (BPTC.detexGetBits64(data0, 33, 33) << 5);
-                    b[3] |= (BPTC.detexGetBits64(data0, 34, 34) << 4);
-                    r[1] = (BPTC.detexGetBits64(data0, 35, 39));
-                    g[3] |= (BPTC.detexGetBits64(data0, 40, 40) << 4);
-                    g[2] |= (BPTC.detexGetBits64(data0, 41, 44));
-                    g[1] = (BPTC.detexGetBits64(data0, 45, 50));
-                    g[3] |= (BPTC.detexGetBits64(data0, 51, 54));
-                    b[1] = (BPTC.detexGetBits64(data0, 55, 59));
-                    b[3] |= (BPTC.detexGetBits64(data0, 60, 60) << 1);
-                    b[2] |= (BPTC.detexGetBits64(data0, 61, 63));
-                    b[2] |= (BPTC.detexGetBits64(data1, 0, 0) << 3);
-                    r[2] = (BPTC.detexGetBits64(data1, 1, 5));
-                    b[3] |= (BPTC.detexGetBits64(data1, 6, 6) << 2);
-                    r[3] = (BPTC.detexGetBits64(data1, 7, 11));
-                    b[3] |= (BPTC.detexGetBits64(data1, 12, 12) << 3);
-                    partition_set_id = (BPTC.detexGetBits64(data1, 13, 17));
+                    r[0] = (BPTC.detexGetBits64(data0,
+                        5,
+                        12));
+                    b[3] = (BPTC.detexGetBits64(data0,
+                        13,
+                        13));
+                    b[2] = (BPTC.detexGetBits64(data0,
+                        14,
+                        14) << 4);
+                    g[0] = (BPTC.detexGetBits64(data0,
+                        15,
+                        22));
+                    g[2] = (BPTC.detexGetBits64(data0,
+                        23,
+                        23) << 5);
+                    g[2] |= (BPTC.detexGetBits64(data0,
+                        24,
+                        24) << 4);
+                    b[0] = (BPTC.detexGetBits64(data0,
+                        25,
+                        32));
+                    g[3] = (BPTC.detexGetBits64(data0,
+                        33,
+                        33) << 5);
+                    b[3] |= (BPTC.detexGetBits64(data0,
+                        34,
+                        34) << 4);
+                    r[1] = (BPTC.detexGetBits64(data0,
+                        35,
+                        39));
+                    g[3] |= (BPTC.detexGetBits64(data0,
+                        40,
+                        40) << 4);
+                    g[2] |= (BPTC.detexGetBits64(data0,
+                        41,
+                        44));
+                    g[1] = (BPTC.detexGetBits64(data0,
+                        45,
+                        50));
+                    g[3] |= (BPTC.detexGetBits64(data0,
+                        51,
+                        54));
+                    b[1] = (BPTC.detexGetBits64(data0,
+                        55,
+                        59));
+                    b[3] |= (BPTC.detexGetBits64(data0,
+                        60,
+                        60) << 1);
+                    b[2] |= (BPTC.detexGetBits64(data0,
+                        61,
+                        63));
+                    b[2] |= (BPTC.detexGetBits64(data1,
+                        0,
+                        0) << 3);
+                    r[2] = (BPTC.detexGetBits64(data1,
+                        1,
+                        5));
+                    b[3] |= (BPTC.detexGetBits64(data1,
+                        6,
+                        6) << 2);
+                    r[3] = (BPTC.detexGetBits64(data1,
+                        7,
+                        11));
+                    b[3] |= (BPTC.detexGetBits64(data1,
+                        12,
+                        12) << 3);
+                    partition_set_id = (BPTC.detexGetBits64(data1,
+                        13,
+                        17));
                     block.index = 64 + 18;
                     delta_bits_r = delta_bits_b = 5;
                     delta_bits_g = 6;
@@ -449,29 +814,75 @@ namespace Scarlet.Drawing.Compression
                         // m[4:0],r0[7:0],b3[1],b2[4],g0[7:0],b2[5],g2[4],b0[7:0],b3[5],b3[4],
                         // r1[4:0],g3[4],g2[3:0],g1[4:0],b3[0],g3[3:0],b1[5:0],b2[3:0],r2[4:0],
                         // b3[2],r3[4:0],b3[3]
-                    r[0] = (BPTC.detexGetBits64(data0, 5, 12));
-                    b[3] = (BPTC.detexGetBits64(data0, 13, 13) << 1);
-                    b[2] = (BPTC.detexGetBits64(data0, 14, 14) << 4);
-                    g[0] = (BPTC.detexGetBits64(data0, 15, 22));
-                    b[2] |= (BPTC.detexGetBits64(data0, 23, 23) << 5);
-                    g[2] = (BPTC.detexGetBits64(data0, 24, 24) << 4);
-                    b[0] = (BPTC.detexGetBits64(data0, 25, 32));
-                    b[3] |= (BPTC.detexGetBits64(data0, 33, 33) << 5);
-                    b[3] |= (BPTC.detexGetBits64(data0, 34, 34) << 4);
-                    r[1] = (BPTC.detexGetBits64(data0, 35, 39));
-                    g[3] = (BPTC.detexGetBits64(data0, 40, 40) << 4);
-                    g[2] |= (BPTC.detexGetBits64(data0, 41, 44));
-                    g[1] = (BPTC.detexGetBits64(data0, 45, 49));
-                    b[3] |= (BPTC.detexGetBits64(data0, 50, 50));
-                    g[3] |= (BPTC.detexGetBits64(data0, 51, 54));
-                    b[1] = (BPTC.detexGetBits64(data0, 55, 60));
-                    b[2] |= (BPTC.detexGetBits64(data0, 61, 63));
-                    b[2] |= (BPTC.detexGetBits64(data1, 0, 0) << 3);
-                    r[2] = (BPTC.detexGetBits64(data1, 1, 5));
-                    b[3] |= (BPTC.detexGetBits64(data1, 6, 6) << 2);
-                    r[3] = (BPTC.detexGetBits64(data1, 7, 11));
-                    b[3] |= (BPTC.detexGetBits64(data1, 12, 12) << 3);
-                    partition_set_id = (BPTC.detexGetBits64(data1, 13, 17));
+                    r[0] = (BPTC.detexGetBits64(data0,
+                        5,
+                        12));
+                    b[3] = (BPTC.detexGetBits64(data0,
+                        13,
+                        13) << 1);
+                    b[2] = (BPTC.detexGetBits64(data0,
+                        14,
+                        14) << 4);
+                    g[0] = (BPTC.detexGetBits64(data0,
+                        15,
+                        22));
+                    b[2] |= (BPTC.detexGetBits64(data0,
+                        23,
+                        23) << 5);
+                    g[2] = (BPTC.detexGetBits64(data0,
+                        24,
+                        24) << 4);
+                    b[0] = (BPTC.detexGetBits64(data0,
+                        25,
+                        32));
+                    b[3] |= (BPTC.detexGetBits64(data0,
+                        33,
+                        33) << 5);
+                    b[3] |= (BPTC.detexGetBits64(data0,
+                        34,
+                        34) << 4);
+                    r[1] = (BPTC.detexGetBits64(data0,
+                        35,
+                        39));
+                    g[3] = (BPTC.detexGetBits64(data0,
+                        40,
+                        40) << 4);
+                    g[2] |= (BPTC.detexGetBits64(data0,
+                        41,
+                        44));
+                    g[1] = (BPTC.detexGetBits64(data0,
+                        45,
+                        49));
+                    b[3] |= (BPTC.detexGetBits64(data0,
+                        50,
+                        50));
+                    g[3] |= (BPTC.detexGetBits64(data0,
+                        51,
+                        54));
+                    b[1] = (BPTC.detexGetBits64(data0,
+                        55,
+                        60));
+                    b[2] |= (BPTC.detexGetBits64(data0,
+                        61,
+                        63));
+                    b[2] |= (BPTC.detexGetBits64(data1,
+                        0,
+                        0) << 3);
+                    r[2] = (BPTC.detexGetBits64(data1,
+                        1,
+                        5));
+                    b[3] |= (BPTC.detexGetBits64(data1,
+                        6,
+                        6) << 2);
+                    r[3] = (BPTC.detexGetBits64(data1,
+                        7,
+                        11));
+                    b[3] |= (BPTC.detexGetBits64(data1,
+                        12,
+                        12) << 3);
+                    partition_set_id = (BPTC.detexGetBits64(data1,
+                        13,
+                        17));
                     block.index = 64 + 18;
                     delta_bits_r = delta_bits_g = 5;
                     delta_bits_b = 6;
@@ -480,57 +891,137 @@ namespace Scarlet.Drawing.Compression
                         // m[4:0],r0[5:0],g3[4],b3[0],b3[1],b2[4],g0[5:0],g2[5],b2[5],b3[2],
                         // g2[4],b0[5:0],g3[5],b3[3],b3[5],b3[4],r1[5:0],g2[3:0],g1[5:0],g3[3:0],
                         // b1[5:0],b2[3:0],r2[5:0],r3[5:0]
-                    r[0] = (BPTC.detexGetBits64(data0, 5, 10));
-                    g[3] = (BPTC.detexGetBits64(data0, 11, 11) << 4);
-                    b[3] = (BPTC.detexGetBits64(data0, 12, 13));
-                    b[2] = (BPTC.detexGetBits64(data0, 14, 14) << 4);
-                    g[0] = (BPTC.detexGetBits64(data0, 15, 20));
-                    g[2] = (BPTC.detexGetBits64(data0, 21, 21) << 5);
-                    b[2] |= (BPTC.detexGetBits64(data0, 22, 22) << 5);
-                    b[3] |= (BPTC.detexGetBits64(data0, 23, 23) << 2);
-                    g[2] |= (BPTC.detexGetBits64(data0, 24, 24) << 4);
-                    b[0] = (BPTC.detexGetBits64(data0, 25, 30));
-                    g[3] |= (BPTC.detexGetBits64(data0, 31, 31) << 5);
-                    b[3] |= (BPTC.detexGetBits64(data0, 32, 32) << 3);
-                    b[3] |= (BPTC.detexGetBits64(data0, 33, 33) << 5);
-                    b[3] |= (BPTC.detexGetBits64(data0, 34, 34) << 4);
-                    r[1] = (BPTC.detexGetBits64(data0, 35, 40));
-                    g[2] |= (BPTC.detexGetBits64(data0, 41, 44));
-                    g[1] = (BPTC.detexGetBits64(data0, 45, 50));
-                    g[3] |= (BPTC.detexGetBits64(data0, 51, 54));
-                    b[1] = (BPTC.detexGetBits64(data0, 55, 60));
-                    b[2] |= (BPTC.detexGetBits64(data0, 61, 63));
-                    b[2] |= (BPTC.detexGetBits64(data1, 0, 0) << 3);
-                    r[2] = (BPTC.detexGetBits64(data1, 1, 6));
-                    r[3] = (BPTC.detexGetBits64(data1, 7, 12));
-                    partition_set_id = (BPTC.detexGetBits64(data1, 13, 17));
+                    r[0] = (BPTC.detexGetBits64(data0,
+                        5,
+                        10));
+                    g[3] = (BPTC.detexGetBits64(data0,
+                        11,
+                        11) << 4);
+                    b[3] = (BPTC.detexGetBits64(data0,
+                        12,
+                        13));
+                    b[2] = (BPTC.detexGetBits64(data0,
+                        14,
+                        14) << 4);
+                    g[0] = (BPTC.detexGetBits64(data0,
+                        15,
+                        20));
+                    g[2] = (BPTC.detexGetBits64(data0,
+                        21,
+                        21) << 5);
+                    b[2] |= (BPTC.detexGetBits64(data0,
+                        22,
+                        22) << 5);
+                    b[3] |= (BPTC.detexGetBits64(data0,
+                        23,
+                        23) << 2);
+                    g[2] |= (BPTC.detexGetBits64(data0,
+                        24,
+                        24) << 4);
+                    b[0] = (BPTC.detexGetBits64(data0,
+                        25,
+                        30));
+                    g[3] |= (BPTC.detexGetBits64(data0,
+                        31,
+                        31) << 5);
+                    b[3] |= (BPTC.detexGetBits64(data0,
+                        32,
+                        32) << 3);
+                    b[3] |= (BPTC.detexGetBits64(data0,
+                        33,
+                        33) << 5);
+                    b[3] |= (BPTC.detexGetBits64(data0,
+                        34,
+                        34) << 4);
+                    r[1] = (BPTC.detexGetBits64(data0,
+                        35,
+                        40));
+                    g[2] |= (BPTC.detexGetBits64(data0,
+                        41,
+                        44));
+                    g[1] = (BPTC.detexGetBits64(data0,
+                        45,
+                        50));
+                    g[3] |= (BPTC.detexGetBits64(data0,
+                        51,
+                        54));
+                    b[1] = (BPTC.detexGetBits64(data0,
+                        55,
+                        60));
+                    b[2] |= (BPTC.detexGetBits64(data0,
+                        61,
+                        63));
+                    b[2] |= (BPTC.detexGetBits64(data1,
+                        0,
+                        0) << 3);
+                    r[2] = (BPTC.detexGetBits64(data1,
+                        1,
+                        6));
+                    r[3] = (BPTC.detexGetBits64(data1,
+                        7,
+                        12));
+                    partition_set_id = (BPTC.detexGetBits64(data1,
+                        13,
+                        17));
                     block.index = 64 + 18;
                     //		delta_bits_r = delta_bits_g = delta_bits_b = 6;
                     break;
                 case 10:    // Original mode 3
                             // m[4:0],r0[9:0],g0[9:0],b0[9:0],r1[9:0],g1[9:0],b1[9:0]
-                    r[0] = (BPTC.detexGetBits64(data0, 5, 14));
-                    g[0] = (BPTC.detexGetBits64(data0, 15, 24));
-                    b[0] = (BPTC.detexGetBits64(data0, 25, 34));
-                    r[1] = (BPTC.detexGetBits64(data0, 35, 44));
-                    g[1] = (BPTC.detexGetBits64(data0, 45, 54));
-                    b[1] = (BPTC.detexGetBits64(data0, 55, 63));
-                    b[1] |= (BPTC.detexGetBits64(data1, 0, 0) << 9);
+                    r[0] = (BPTC.detexGetBits64(data0,
+                        5,
+                        14));
+                    g[0] = (BPTC.detexGetBits64(data0,
+                        15,
+                        24));
+                    b[0] = (BPTC.detexGetBits64(data0,
+                        25,
+                        34));
+                    r[1] = (BPTC.detexGetBits64(data0,
+                        35,
+                        44));
+                    g[1] = (BPTC.detexGetBits64(data0,
+                        45,
+                        54));
+                    b[1] = (BPTC.detexGetBits64(data0,
+                        55,
+                        63));
+                    b[1] |= (BPTC.detexGetBits64(data1,
+                        0,
+                        0) << 9);
                     partition_set_id = 0;
                     block.index = 65;
                     //		delta_bits_r = delta_bits_g = delta_bits_b = 10;
                     break;
                 case 11:    // Original mode 7
                             // m[4:0],r0[9:0],g0[9:0],b0[9:0],r1[8:0],r0[10],g1[8:0],g0[10],b1[8:0],b0[10]
-                    r[0] = (BPTC.detexGetBits64(data0, 5, 14));
-                    g[0] = (BPTC.detexGetBits64(data0, 15, 24));
-                    b[0] = (BPTC.detexGetBits64(data0, 25, 34));
-                    r[1] = (BPTC.detexGetBits64(data0, 35, 43));
-                    r[0] |= (BPTC.detexGetBits64(data0, 44, 44) << 10);
-                    g[1] = (BPTC.detexGetBits64(data0, 45, 53));
-                    g[0] |= (BPTC.detexGetBits64(data0, 54, 54) << 10);
-                    b[1] = (BPTC.detexGetBits64(data0, 55, 63));
-                    b[0] |= (BPTC.detexGetBits64(data1, 0, 0) << 10);
+                    r[0] = (BPTC.detexGetBits64(data0,
+                        5,
+                        14));
+                    g[0] = (BPTC.detexGetBits64(data0,
+                        15,
+                        24));
+                    b[0] = (BPTC.detexGetBits64(data0,
+                        25,
+                        34));
+                    r[1] = (BPTC.detexGetBits64(data0,
+                        35,
+                        43));
+                    r[0] |= (BPTC.detexGetBits64(data0,
+                        44,
+                        44) << 10);
+                    g[1] = (BPTC.detexGetBits64(data0,
+                        45,
+                        53));
+                    g[0] |= (BPTC.detexGetBits64(data0,
+                        54,
+                        54) << 10);
+                    b[1] = (BPTC.detexGetBits64(data0,
+                        55,
+                        63));
+                    b[0] |= (BPTC.detexGetBits64(data1,
+                        0,
+                        0) << 10);
                     partition_set_id = 0;
                     block.index = 65;
                     delta_bits_r = delta_bits_g = delta_bits_b = 9;
@@ -538,16 +1029,36 @@ namespace Scarlet.Drawing.Compression
                 case 12:    // Original mode 11
                             // m[4:0],r0[9:0],g0[9:0],b0[9:0],r1[7:0],r0[10:11],g1[7:0],g0[10:11],
                             // b1[7:0],b0[10:11]
-                    r[0] = (BPTC.detexGetBits64(data0, 5, 14));
-                    g[0] = (BPTC.detexGetBits64(data0, 15, 24));
-                    b[0] = (BPTC.detexGetBits64(data0, 25, 34));
-                    r[1] = (BPTC.detexGetBits64(data0, 35, 42));
-                    r[0] |= (BPTC.detexGetBits64Reversed(data0, 44, 43) << 10);    // Reversed.
-                    g[1] = (BPTC.detexGetBits64(data0, 45, 52));
-                    g[0] |= (BPTC.detexGetBits64Reversed(data0, 54, 53) << 10);    // Reversed.
-                    b[1] = (BPTC.detexGetBits64(data0, 55, 62));
-                    b[0] |= (BPTC.detexGetBits64(data0, 63, 63) << 11);    // MSB
-                    b[0] |= (BPTC.detexGetBits64(data1, 0, 0) << 10);  // LSB
+                    r[0] = (BPTC.detexGetBits64(data0,
+                        5,
+                        14));
+                    g[0] = (BPTC.detexGetBits64(data0,
+                        15,
+                        24));
+                    b[0] = (BPTC.detexGetBits64(data0,
+                        25,
+                        34));
+                    r[1] = (BPTC.detexGetBits64(data0,
+                        35,
+                        42));
+                    r[0] |= (BPTC.detexGetBits64Reversed(data0,
+                        44,
+                        43) << 10);    // Reversed.
+                    g[1] = (BPTC.detexGetBits64(data0,
+                        45,
+                        52));
+                    g[0] |= (BPTC.detexGetBits64Reversed(data0,
+                        54,
+                        53) << 10);    // Reversed.
+                    b[1] = (BPTC.detexGetBits64(data0,
+                        55,
+                        62));
+                    b[0] |= (BPTC.detexGetBits64(data0,
+                        63,
+                        63) << 11);    // MSB
+                    b[0] |= (BPTC.detexGetBits64(data1,
+                        0,
+                        0) << 10);  // LSB
                     partition_set_id = 0;
                     block.index = 65;
                     delta_bits_r = delta_bits_g = delta_bits_b = 8;
@@ -555,16 +1066,36 @@ namespace Scarlet.Drawing.Compression
                 case 13:    // Original mode 15
                             // m[4:0],r0[9:0],g0[9:0],b0[9:0],r1[3:0],r0[10:15],g1[3:0],g0[10:15],
                             // b1[3:0],b0[10:15]
-                    r[0] = (BPTC.detexGetBits64(data0, 5, 14));
-                    g[0] = (BPTC.detexGetBits64(data0, 15, 24));
-                    b[0] = (BPTC.detexGetBits64(data0, 25, 34));
-                    r[1] = (BPTC.detexGetBits64(data0, 35, 38));
-                    r[0] |= (BPTC.detexGetBits64Reversed(data0, 44, 39) << 10);    // Reversed.
-                    g[1] = (BPTC.detexGetBits64(data0, 45, 48));
-                    g[0] |= (BPTC.detexGetBits64Reversed(data0, 54, 49) << 10);    // Reversed.
-                    b[1] = (BPTC.detexGetBits64(data0, 55, 58));
-                    b[0] |= (BPTC.detexGetBits64Reversed(data0, 63, 59) << 11);    // Reversed.
-                    b[0] |= (BPTC.detexGetBits64(data1, 0, 0) << 10);
+                    r[0] = (BPTC.detexGetBits64(data0,
+                        5,
+                        14));
+                    g[0] = (BPTC.detexGetBits64(data0,
+                        15,
+                        24));
+                    b[0] = (BPTC.detexGetBits64(data0,
+                        25,
+                        34));
+                    r[1] = (BPTC.detexGetBits64(data0,
+                        35,
+                        38));
+                    r[0] |= (BPTC.detexGetBits64Reversed(data0,
+                        44,
+                        39) << 10);    // Reversed.
+                    g[1] = (BPTC.detexGetBits64(data0,
+                        45,
+                        48));
+                    g[0] |= (BPTC.detexGetBits64Reversed(data0,
+                        54,
+                        49) << 10);    // Reversed.
+                    b[1] = (BPTC.detexGetBits64(data0,
+                        55,
+                        58));
+                    b[0] |= (BPTC.detexGetBits64Reversed(data0,
+                        63,
+                        59) << 11);    // Reversed.
+                    b[0] |= (BPTC.detexGetBits64(data1,
+                        0,
+                        0) << 10);
                     partition_set_id = 0;
                     block.index = 65;
                     delta_bits_r = delta_bits_g = delta_bits_b = 4;
@@ -575,9 +1106,15 @@ namespace Scarlet.Drawing.Compression
 
             if (signed_flag)
             {
-                r[0] = SignExtend(r[0], bptc_float_EPB[mode], 32);
-                g[0] = SignExtend(g[0], bptc_float_EPB[mode], 32);
-                b[0] = SignExtend(b[0], bptc_float_EPB[mode], 32);
+                r[0] = SignExtend(r[0],
+                    bptc_float_EPB[mode],
+                    32);
+                g[0] = SignExtend(g[0],
+                    bptc_float_EPB[mode],
+                    32);
+                b[0] = SignExtend(b[0],
+                    bptc_float_EPB[mode],
+                    32);
             }
 
             if (mode != 9 && mode != 10)
@@ -585,17 +1122,29 @@ namespace Scarlet.Drawing.Compression
                 // Transformed endpoints.
                 for (int i = 1; i < nu_subsets * 2; i++)
                 {
-                    r[i] = SignExtend(r[i], delta_bits_r, 32);
+                    r[i] = SignExtend(r[i],
+                        delta_bits_r,
+                        32);
                     r[i] = ((r[0] + r[i]) & (((uint)1 << bptc_float_EPB[mode]) - 1));
-                    g[i] = SignExtend(g[i], delta_bits_g, 32);
+                    g[i] = SignExtend(g[i],
+                        delta_bits_g,
+                        32);
                     g[i] = ((g[0] + g[i]) & (((uint)1 << bptc_float_EPB[mode]) - 1));
-                    b[i] = SignExtend(b[i], delta_bits_b, 32);
+                    b[i] = SignExtend(b[i],
+                        delta_bits_b,
+                        32);
                     b[i] = ((b[0] + b[i]) & (((uint)1 << bptc_float_EPB[mode]) - 1));
                     if (signed_flag)
                     {
-                        r[i] = SignExtend(r[i], bptc_float_EPB[mode], 32);
-                        g[i] = SignExtend(g[i], bptc_float_EPB[mode], 32);
-                        b[i] = SignExtend(b[i], bptc_float_EPB[mode], 32);
+                        r[i] = SignExtend(r[i],
+                            bptc_float_EPB[mode],
+                            32);
+                        g[i] = SignExtend(g[i],
+                            bptc_float_EPB[mode],
+                            32);
+                        b[i] = SignExtend(b[i],
+                            bptc_float_EPB[mode],
+                            32);
                     }
                 }
             }
@@ -605,9 +1154,15 @@ namespace Scarlet.Drawing.Compression
                 {
                     for (int i = 1; i < nu_subsets * 2; i++)
                     {
-                        r[i] = SignExtend(r[i], bptc_float_EPB[mode], 32);
-                        g[i] = SignExtend(g[i], bptc_float_EPB[mode], 32);
-                        b[i] = SignExtend(b[i], bptc_float_EPB[mode], 32);
+                        r[i] = SignExtend(r[i],
+                            bptc_float_EPB[mode],
+                            32);
+                        g[i] = SignExtend(g[i],
+                            bptc_float_EPB[mode],
+                            32);
+                        b[i] = SignExtend(b[i],
+                            bptc_float_EPB[mode],
+                            32);
                     }
                 }
             }
@@ -617,18 +1172,24 @@ namespace Scarlet.Drawing.Compression
             {
                 for (int i = 0; i < 2 * nu_subsets; i++)
                 {
-                    r[i] = (uint)UnquantizeSigned((int)r[i], mode);
-                    g[i] = (uint)UnquantizeSigned((int)g[i], mode);
-                    b[i] = (uint)UnquantizeSigned((int)b[i], mode);
+                    r[i] = (uint)UnquantizeSigned((int)r[i],
+                        mode);
+                    g[i] = (uint)UnquantizeSigned((int)g[i],
+                        mode);
+                    b[i] = (uint)UnquantizeSigned((int)b[i],
+                        mode);
                 }
             }
             else
             {
                 for (int i = 0; i < 2 * nu_subsets; i++)
                 {
-                    r[i] = Unquantize(r[i], mode);
-                    g[i] = Unquantize(g[i], mode);
-                    b[i] = Unquantize(b[i], mode);
+                    r[i] = Unquantize(r[i],
+                        mode);
+                    g[i] = Unquantize(g[i],
+                        mode);
+                    b[i] = Unquantize(b[i],
+                        mode);
                 }
             }
 
@@ -636,12 +1197,16 @@ namespace Scarlet.Drawing.Compression
             for (int i = 0; i < 16; i++)
             {
                 // subset_index[i] is a number from 0 to 1, depending on the number of subsets.
-                subset_index[i] = (byte)GetPartitionIndex(nu_subsets, partition_set_id, i);
+                subset_index[i] = (byte)GetPartitionIndex(nu_subsets,
+                    partition_set_id,
+                    i);
             }
 
             byte[] anchor_index = new byte[4];    // Only need max. 2 elements
             for (int i = 0; i < nu_subsets; i++)
-                anchor_index[i] = (byte)GetAnchorIndex(partition_set_id, i, nu_subsets);
+                anchor_index[i] = (byte)GetAnchorIndex(partition_set_id,
+                    i,
+                    nu_subsets);
 
             byte[] color_index = new byte[16];
             // Extract index bits.
@@ -685,7 +1250,10 @@ namespace Scarlet.Drawing.Compression
 
                 if (signed_flag)
                 {
-                    r16 = InterpolateFloat(endpoint_start_r, endpoint_end_r, color_index[i], (byte)color_index_bit_count);
+                    r16 = InterpolateFloat(endpoint_start_r,
+                        endpoint_end_r,
+                        color_index[i],
+                        (byte)color_index_bit_count);
                     if (r16 < 0)
 
                         r16 = -(((-r16) * 31) >> 5);
@@ -698,7 +1266,10 @@ namespace Scarlet.Drawing.Compression
                         r16 = -r16;
                     }
                     r16 |= s;
-                    g16 = InterpolateFloat(endpoint_start_g, endpoint_end_g, color_index[i], (byte)color_index_bit_count);
+                    g16 = InterpolateFloat(endpoint_start_g,
+                        endpoint_end_g,
+                        color_index[i],
+                        (byte)color_index_bit_count);
                     if (g16 < 0)
 
                         g16 = -(((-g16) * 31) >> 5);
@@ -711,7 +1282,10 @@ namespace Scarlet.Drawing.Compression
                         g16 = -g16;
                     }
                     g16 |= s;
-                    b16 = InterpolateFloat(endpoint_start_b, endpoint_end_b, color_index[i], (byte)color_index_bit_count);
+                    b16 = InterpolateFloat(endpoint_start_b,
+                        endpoint_end_b,
+                        color_index[i],
+                        (byte)color_index_bit_count);
                     if (b16 < 0)
 
                         b16 = -(((-b16) * 31) >> 5);
@@ -727,9 +1301,18 @@ namespace Scarlet.Drawing.Compression
                 }
                 else
                 {
-                    r16 = (InterpolateFloat(endpoint_start_r, endpoint_end_r, color_index[i], (byte)color_index_bit_count) * 31 / 64);
-                    g16 = (InterpolateFloat(endpoint_start_g, endpoint_end_g, color_index[i], (byte)color_index_bit_count) * 31 / 64);
-                    b16 = (InterpolateFloat(endpoint_start_b, endpoint_end_b, color_index[i], (byte)color_index_bit_count) * 31 / 64);
+                    r16 = (InterpolateFloat(endpoint_start_r,
+                        endpoint_end_r,
+                        color_index[i],
+                        (byte)color_index_bit_count) * 31 / 64);
+                    g16 = (InterpolateFloat(endpoint_start_g,
+                        endpoint_end_g,
+                        color_index[i],
+                        (byte)color_index_bit_count) * 31 / 64);
+                    b16 = (InterpolateFloat(endpoint_start_b,
+                        endpoint_end_b,
+                        color_index[i],
+                        (byte)color_index_bit_count) * 31 / 64);
                 }
 
                 pixel_buffer[(i * 4) + 0] = (ushort)b16;
